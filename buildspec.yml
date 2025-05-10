@@ -1,0 +1,25 @@
+version: 0.2
+
+phases:
+  pre_build:
+    commands:
+      - echo Logging in to Amazon ECR...
+      - aws ecr get-login-password --region eu-central-1 | docker login --username AWS --password-stdin 728330563729.dkr.ecr.eu-central-1.amazonaws.com
+
+  build:
+    commands:
+      - echo Building Backend Image...
+      - docker build -t rosesmile-backend ./backend
+      - docker tag rosesmile-backend:latest 728330563729.dkr.ecr.eu-central-1.amazonaws.com/rosesmile-backend:latest
+
+      - echo Building Frontend Image...
+      - docker build -t rosesmile-client ./client
+      - docker tag rosesmile-client:latest 728330563729.dkr.ecr.eu-central-1.amazonaws.com/rosesmile-client:latest
+
+  post_build:
+    commands:
+      - echo Pushing Backend Image...
+      - docker push 728330563729.dkr.ecr.eu-central-1.amazonaws.com/rosesmile-backend:latest
+
+      - echo Pushing Frontend Image...
+      - docker push 728330563729.dkr.ecr.eu-central-1.amazonaws.com/rosesmile-client:latest
