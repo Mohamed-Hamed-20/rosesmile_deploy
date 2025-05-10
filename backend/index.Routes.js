@@ -1,0 +1,28 @@
+"use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+const express_1 = require("express");
+const auth_routes_1 = __importDefault(require("./modules/auth/auth.routes"));
+const user_routes_1 = __importDefault(require("./modules/user/user.routes"));
+const section_routes_1 = __importDefault(require("./modules/section/section.routes"));
+const service_routes_1 = __importDefault(require("./modules/service/service.routes"));
+const offers_routes_1 = __importDefault(require("./modules/offers/offers.routes"));
+const doctor_routes_1 = __importDefault(require("./modules/doctor/doctor.routes"));
+const form_routes_1 = __importDefault(require("./modules/form/form.routes"));
+const sheet_routes_1 = __importDefault(require("./modules/sheet/sheet.routes"));
+const hero_routes_1 = __importDefault(require("./modules/hero/hero.routes"));
+const news_routes_1 = __importDefault(require("./modules/news/news.routes"));
+const router = (0, express_1.Router)();
+router.use("/auth", auth_routes_1.default);
+router.use("/user", user_routes_1.default);
+router.use("/section", section_routes_1.default);
+router.use("/service", service_routes_1.default);
+router.use("/offer", offers_routes_1.default);
+router.use("/doctor", doctor_routes_1.default);
+router.use("/form", form_routes_1.default);
+router.use("/sheet", sheet_routes_1.default);
+router.use("/hero", hero_routes_1.default);
+router.use("/news", news_routes_1.default);
+exports.default = router;

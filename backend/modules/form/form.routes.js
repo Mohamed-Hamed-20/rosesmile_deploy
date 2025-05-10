@@ -1,0 +1,20 @@
+"use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+const express_1 = require("express");
+const validation_1 = require("../../middleware/validation");
+const auth_1 = require("../../middleware/auth");
+const user_interface_1 = require("../../DB/interfaces/user.interface");
+const form_valid_1 = require("./form.valid");
+const form_service_1 = __importDefault(require("./service/form.service"));
+const errorHandling_1 = require("../../utils/errorHandling");
+const formRouter = (0, express_1.Router)();
+formRouter.post('/', (0, validation_1.valid)(form_valid_1.addFormSchema), (0, errorHandling_1.asyncHandler)(form_service_1.default.addForm));
+formRouter.patch('/:id', (0, auth_1.isAuth)([user_interface_1.Roles.SuperAdmin, user_interface_1.Roles.Admin]), (0, validation_1.valid)(form_valid_1.addCommentSchema), (0, errorHandling_1.asyncHandler)(form_service_1.default.updateCommentAndStatus));
+formRouter.put('/:id', (0, auth_1.isAuth)([user_interface_1.Roles.SuperAdmin]), (0, validation_1.valid)(form_valid_1.updateFormSchema), (0, errorHandling_1.asyncHandler)(form_service_1.default.updateForm));
+formRouter.delete('/:id', (0, auth_1.isAuth)([user_interface_1.Roles.SuperAdmin]), (0, errorHandling_1.asyncHandler)(form_service_1.default.deleteForm));
+formRouter.get('/:id', (0, auth_1.isAuth)([user_interface_1.Roles.SuperAdmin, user_interface_1.Roles.Admin]), (0, errorHandling_1.asyncHandler)(form_service_1.default.getFormById));
+formRouter.get('/', (0, auth_1.isAuth)([user_interface_1.Roles.SuperAdmin, user_interface_1.Roles.Admin]), (0, errorHandling_1.asyncHandler)(form_service_1.default.getAllForms));
+exports.default = formRouter;

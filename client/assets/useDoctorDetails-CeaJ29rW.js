@@ -1,0 +1,1 @@
+import{r as t,a as i}from"./index-BzNwyTTe.js";const h=e=>{const[s,a]=t.useState(null),[c,n]=t.useState(!0),[l,u]=t.useState(null),o=async()=>{try{const r=await i.get(`http://localhost:5000/api/v1/doctor/${e}`);a(r.data.doctor||null)}catch{u("فشل في تحميل تفاصيل الطبيب")}finally{n(!1)}};return t.useEffect(()=>{e&&o()},[e]),{doctor:s,loading:c,error:l,refetch:o}};export{h as u};

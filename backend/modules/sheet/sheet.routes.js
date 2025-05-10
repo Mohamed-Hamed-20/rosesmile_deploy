@@ -1,0 +1,18 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+const express_1 = require("express");
+const sheet_service_1 = require("./service/sheet.service");
+const errorHandling_1 = require("../../utils/errorHandling");
+const auth_1 = require("../../middleware/auth");
+const user_interface_1 = require("../../DB/interfaces/user.interface");
+const validation_1 = require("../../middleware/validation");
+const sheet_valid_1 = require("./sheet.valid");
+const multer_1 = require("../../utils/multer");
+const sheetRouter = (0, express_1.Router)();
+sheetRouter.post('/', (0, multer_1.configureMulter)(1024 * 1024 * 5).single('image'), (0, auth_1.isAuth)([user_interface_1.Roles.SuperAdmin]), (0, validation_1.valid)(sheet_valid_1.createSheetSchema), (0, errorHandling_1.asyncHandler)(sheet_service_1.Sheet.createSheet));
+sheetRouter.put('/:sheetId', (0, auth_1.isAuth)([user_interface_1.Roles.SuperAdmin]), (0, validation_1.valid)(sheet_valid_1.updateSheetSchema), (0, errorHandling_1.asyncHandler)(sheet_service_1.Sheet.updateSheet));
+sheetRouter.put('/image/:sheetId', (0, multer_1.configureMulter)(1024 * 1024 * 5).single('image'), (0, auth_1.isAuth)([user_interface_1.Roles.SuperAdmin]), (0, errorHandling_1.asyncHandler)(sheet_service_1.Sheet.updateSheetImage));
+sheetRouter.get('/', (0, auth_1.isAuth)([user_interface_1.Roles.SuperAdmin]), (0, errorHandling_1.asyncHandler)(sheet_service_1.Sheet.getAllSheets));
+sheetRouter.get('/:url', (0, errorHandling_1.asyncHandler)(sheet_service_1.Sheet.getSheetByUrl));
+sheetRouter.delete('/:id', (0, auth_1.isAuth)([user_interface_1.Roles.SuperAdmin]), (0, validation_1.valid)(sheet_valid_1.deleteSheetSchema), (0, errorHandling_1.asyncHandler)(sheet_service_1.Sheet.deleteSheet));
+exports.default = sheetRouter;
