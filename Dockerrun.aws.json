@@ -1,9 +1,9 @@
 {
-  "AWSEBDockerrunVersion": 2,
+  "AWSEBDockerrunVersion": "2",
   "containerDefinitions": [
     {
       "name": "backend",
-      "image": "your-dockerhub-username/backend:latest",
+      "image": "728330563729.dkr.ecr.eu-central-1.amazonaws.com/rosesmile-backend:latest",
       "essential": true,
       "portMappings": [
         {
@@ -30,7 +30,7 @@
     },
     {
       "name": "client",
-      "image": "your-dockerhub-username/client:latest",
+      "image": "728330563729.dkr.ecr.eu-central-1.amazonaws.com/rosesmile-client:latest",
       "essential": false,
       "portMappings": [
         {
