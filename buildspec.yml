@@ -16,10 +16,6 @@ phases:
       - docker build -t rosesmile-client ./client
       - docker tag rosesmile-client:latest 728330563729.dkr.ecr.eu-central-1.amazonaws.com/rosesmile-client:latest
 
-      - echo Building Redis Image...
-      - docker build -t rosesmile-redis ./redis
-      - docker tag rosesmile-redis:latest 728330563729.dkr.ecr.eu-central-1.amazonaws.com/rosesmile-redis:latest
-
   post_build:
     commands:
       - echo Pushing Backend Image...
@@ -27,6 +23,3 @@ phases:
 
       - echo Pushing Frontend Image...
       - docker push 728330563729.dkr.ecr.eu-central-1.amazonaws.com/rosesmile-client:latest
-
-      - echo Pushing Redis Image...
-      - docker push 728330563729.dkr.ecr.eu-central-1.amazonaws.com/rosesmile-redis:latest
