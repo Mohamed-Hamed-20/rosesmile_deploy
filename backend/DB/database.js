@@ -33,7 +33,7 @@ class Database {
             }
             const uri = `${env_1.databaseConfigration.DB_URL}`;
             const options = {
-                serverSelectionTimeoutMS: 5000,
+                serverSelectionTimeoutMS: 15000,
             };
             try {
                 const connection = yield mongoose_1.default.connect(uri, options);

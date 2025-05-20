@@ -58,6 +58,7 @@ const fs_1 = __importDefault(require("fs"));
 const path_1 = __importDefault(require("path"));
 const crpto_1 = require("../../../utils/crpto");
 const html_Templets_1 = require("../../../utils/html.Templets");
+const cloudinary_1 = require("../../../utils/cloudinary");
 const register = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     const { firstName, lastName, email, password, phone } = req.body;
     const chkemail = yield user_model_1.default.findOne({ email }).select("email");
@@ -101,10 +102,11 @@ const register = (req, res, next) => __awaiter(void 0, void 0, void 0, function*
 });
 exports.register = register;
 const login = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    var _a;
     const { email, password } = req.body;
     const findUser = yield user_model_1.default
         .findOne({ email })
-        .select("firstName lastName email password role avatar isConfirmed isBlocked")
+        .select("firstName lastName email password role phone image isConfirmed isBlocked")
         .lean();
     if (!findUser)
         return next(new errorHandling_1.CustomError("Email is not Found , Please Register First ", 404));
@@ -129,6 +131,7 @@ const login = (req, res, next) => __awaiter(void 0, void 0, void 0, function* ()
     });
     res.cookie("accessToken", `${process.env.ACCESS_TOKEN_START_WITH}${accessToken}`, (0, cookies_1.cokkiesOptions)(2 * 24 * 3600000));
     res.cookie("refreshToken", refreshToken, (0, cookies_1.cokkiesOptions)(7 * 24 * 3600000));
+    findUser.image = Object.assign(Object.assign({}, findUser.image), (yield cloudinary_1.cloudinaryInstance.imageVersions((_a = findUser.image) === null || _a === void 0 ? void 0 : _a.id)));
     return res.status(200).json({
         message: "Login successful",
         success: true,

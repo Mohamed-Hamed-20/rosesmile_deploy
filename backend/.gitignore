@@ -5,5 +5,5 @@
 /logs
 /temp
 /uploads
-
+./node_modules
 /.env

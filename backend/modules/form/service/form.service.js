@@ -144,7 +144,7 @@ class Form {
                 updateForm.service = service;
             if (city)
                 updateForm.city = city;
-            if (comment)
+            if (comment && comment !== '')
                 updateForm.comment = comment;
             if (status)
                 updateForm.status = status;
@@ -209,6 +209,7 @@ class Form {
             const form = yield form_model_1.default
                 .findById(id)
                 .populate('service', 'title')
+                .populate('section', 'title')
                 .populate('editedBy', 'firstName lastName');
             if (!form) {
                 return next(new errorHandling_1.CustomError('Form not found', 404));
@@ -232,6 +233,15 @@ class Form {
             })
                 .sort((sort === null || sort === void 0 ? void 0 : sort.toString()) || '')
                 .paginate(Number(page) || 1, Number(size) || 100)
+                .lookUp({
+                from: 'sections',
+                localField: 'section',
+                foreignField: '_id',
+                as: 'section',
+                isArray: false,
+            }, {
+                title: 1,
+            })
                 .lookUp({
                 from: 'services',
                 localField: 'service',
@@ -265,17 +275,18 @@ class Form {
                 message: 'Forms retrieved successfully',
                 success: true,
                 statusCode: 200,
-                totalDoctors: total,
+                totalForms: total,
                 totalPages: Math.ceil(total / Number(size || 21)),
                 forms,
             });
         });
     }
 }
-Form.allowSearchFields = ['name', 'phone', 'service', 'city'];
+Form.allowSearchFields = ['name', 'phone', 'service', 'city', 'status'];
 Form.defaultFields = [
     'name',
     'phone',
+    'section',
     'service',
     'city',
     'comment',

@@ -40,6 +40,8 @@ exports.AWS_S3Keys = {
 exports.REDIS = {
     HOST: process.env.REDIS_HOST,
     PORT: Number(process.env.REDIS_PORT),
+    URL_Upstash: process.env.Redis_upstash_URL,
+    TOKEN_Upstash: process.env.Redis_upstash_TOKEN,
 };
 exports.CLOUDINARY = {
     CLOUD_NAME: process.env.CLOUDINARY_CLOUD_NAME,

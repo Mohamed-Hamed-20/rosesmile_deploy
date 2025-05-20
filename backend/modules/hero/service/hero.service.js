@@ -121,10 +121,19 @@ const getHero = (req, res, next) => __awaiter(void 0, void 0, void 0, function* 
 exports.getHero = getHero;
 const getAllHero = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     const { limit, skip } = (0, apiFeacture_1.paginate)(Number(req.query.page), Number(req.query.size));
-    const cachedHeroes = yield redis_1.default.get("heroes");
+    let cachedHeroes = null;
+    try {
+        cachedHeroes = yield Promise.race([
+            redis_1.default.get("heroes"),
+            new Promise((resolve) => setTimeout(() => resolve(null), 500)), // timeout بعد 500ms
+        ]);
+    }
+    catch (err) {
+        console.warn("Redis error:", err);
+    }
     if (cachedHeroes) {
         return res.status(200).json({
-            message: "Heroes fetched successfully",
+            message: "Heroes fetched successfully (from cache)",
             success: true,
             statusCode: 200,
             heroes: JSON.parse(cachedHeroes),
@@ -136,12 +145,21 @@ const getAllHero = (req, res, next) => __awaiter(void 0, void 0, void 0, functio
             const versions = yield cloudinary_1.cloudinaryInstance.imageVersions(hero.image.id);
             return Object.assign(Object.assign({}, hero), { image: Object.assign(Object.assign({}, hero.image), versions) });
         }
-        return heroes;
+        return hero;
     })));
-    if (heroes.length > 0) {
-        yield redis_1.default.set("heroes", JSON.stringify(updatedheroes));
+    // حاول نحفظها في Redis لكن من غير ما نوقف لو فشل
+    if (updatedheroes.length > 0) {
+        try {
+            yield Promise.race([
+                redis_1.default.set("heroes", JSON.stringify(updatedheroes)),
+                new Promise((_, reject) => setTimeout(() => reject("Redis set timeout"), 500)),
+            ]);
+        }
+        catch (err) {
+            console.warn("Redis set error:", err);
+        }
     }
-    res.status(200).json({
+    return res.status(200).json({
         message: "Heroes fetched successfully",
         success: true,
         statusCode: 200,
